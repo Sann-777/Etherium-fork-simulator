@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # Geth Node 1
+  geth-node-1:
+    image: ethereum/client-go:latest
+    container_name: geth-node-1
+    command:
+      - --dev
+      - --dev.period=2
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.api=eth,net,web3,debug,admin,personal,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --metrics
+      - --metrics.addr=0.0.0.0
+      - --verbosity=3
+      - --networkid=12345
+      - --port=30303
+    ports:
+      - "8545:8545"  # RPC
+      - "6060:6060"  # Metrics
+    networks:
+      eth-fork-net:
+        aliases:
+          - geth1.local
+
+  # Geth Node 2
+  geth-node-2:
+    image: ethereum/client-go:latest
+    container_name: geth-node-2
+    command:
+      - --dev
+      - --dev.period=2
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.api=eth,net,web3,debug,admin,personal,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --metrics
+      - --metrics.addr=0.0.0.0
+      - --verbosity=3
+      - --networkid=12345
+      - --port=30304
+    ports:
+      - "8546:8545"  # RPC
+      - "6061:6060"  # Metrics
+    networks:
+      eth-fork-net:
+        aliases:
+          - geth2.local
+
+  # Geth Node 3
+  geth-node-3:
+    image: ethereum/client-go:latest
+    container_name: geth-node-3
+    command:
+      - --dev
+      - --dev.period=2
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.api=eth,net,web3,debug,admin,personal,txpool
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --metrics
+      - --metrics.addr=0.0.0.0
+      - --verbosity=3
+      - --networkid=12345
+      - --port=30305
+    ports:
+      - "8547:8545"  # RPC
+      - "6062:6060"  # Metrics
+    networks:
+      eth-fork-net:
+        aliases:
+          - geth3.local
+
+  # Control container for running scripts
+  controller:
+    image: alpine:latest
+    container_name: fork-controller
+    working_dir: /app
+    volumes:
+      - ./scripts:/app/scripts
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - eth-fork-net
+    command: tail -f /dev/null  # Keep container running
+
+networks:
+  eth-fork-net:
+    driver: bridge
