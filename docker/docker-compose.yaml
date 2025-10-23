@@ -16,7 +16,6 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --verbosity=3
-      - --networkid=12345
       - --port=30303
     ports:
       - "8545:8545"  # RPC
@@ -41,7 +40,6 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --verbosity=3
-      - --networkid=12345
       - --port=30304
     ports:
       - "8546:8545"  # RPC
@@ -66,7 +64,6 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --verbosity=3
-      - --networkid=12345
       - --port=30305
     ports:
       - "8547:8545"  # RPC
@@ -78,16 +75,16 @@ services:
 
   # Control container for running scripts
   controller:
-    image: alpine:latest
+    image: curlimages/curl:latest  # This has curl pre-installed
     container_name: fork-controller
     working_dir: /app
     volumes:
-      - ./scripts:/app/scripts
+      - ../scripts:/app/scripts
+
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - eth-fork-net
-    command: tail -f /dev/null  # Keep container running
-
+    command: sh -c "tail -f /dev/null"
 networks:
   eth-fork-net:
     driver: bridge
