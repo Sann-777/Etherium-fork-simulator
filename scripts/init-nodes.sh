@@ -36,9 +36,19 @@ wait_for_node() {
 }
 
 echo "1. Testing network connectivity..."
-docker exec fork-controller ping -c 1 geth-node-1
-docker exec fork-controller ping -c 1 geth-node-2
-docker exec fork-controller ping -c 1 geth-node-3
+# Test RPC connectivity instead of ping
+for i in 1 2 3; do
+    echo "Testing geth-node-$i RPC..."
+    response=$(curl -s -X POST http://geth-node-$i:8545 \
+        -H "Content-Type: application/json" \
+        --data '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}' 2>/dev/null)
+    
+    if echo "$response" | grep -q '"result":"1337"'; then
+        echo "✅ geth-node-$i RPC is accessible"
+    else
+        echo "❌ geth-node-$i RPC not accessible"
+    fi
+done
 
 echo ""
 echo "2. Waiting for all Geth nodes to be ready..."
