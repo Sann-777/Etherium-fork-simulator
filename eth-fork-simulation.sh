@@ -5,6 +5,13 @@ echo "============================"
 echo "Demonstrating Ethereum consensus mechanics"
 echo ""
 
+# Change to docker directory, start containers, then change back
+cd docker && docker-compose up -d && cd ..
+
+# Wait for containers to start and initialize nodes
+echo "⏳ Initializing nodes and establishing peer connections..."
+docker exec fork-controller sh /app/scripts/init-nodes.sh
+
 # Function to log with timestamp
 log() {
     echo "[$(date +%H:%M:%S)] $1"
