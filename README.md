@@ -12,7 +12,7 @@ eth-fork-simulator/
 │   ├── transaction-success.png
 │   └── network-partition-proof.png
 └── scripts/                           # Your working scripts
-    ├── host-best-fork-simulation.sh
+    ├── eth-fork-simulation.sh
     ├── host-partition.sh
     ├── host-generate-txs.sh
     ├── host-status.sh
@@ -21,9 +21,6 @@ eth-fork-simulator/
     └── monitor-status.sh
 ```
 
-## 1. **README.md** (Main Portfolio Showcase)
-
-```markdown
 # 🚀 Ethereum Fork Simulation Toolkit
 
 A Docker-native toolkit for simulating and observing Ethereum network forks, built to demonstrate DevOps skills for blockchain infrastructure.
